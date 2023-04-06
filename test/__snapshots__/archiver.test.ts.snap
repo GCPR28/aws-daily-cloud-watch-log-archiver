@@ -91,7 +91,7 @@ Object {
             },
           ],
         },
-        "BucketName": "log-archive-75e7f0d6",
+        "BucketName": "example-log-archive-bucket",
         "LifecycleConfiguration": Object {
           "Rules": Array [
             Object {

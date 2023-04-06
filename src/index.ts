@@ -8,6 +8,7 @@ import { LogArchiverFunction } from './funcs/log-archiver-function';
 
 export interface DailyCloudWatchLogArchiverProps {
   readonly schedules: ScheduleProperty[];
+  readonly targetBucket: string;
 }
 
 export interface ScheduleProperty {
@@ -41,10 +42,17 @@ export class DailyCloudWatchLogArchiver extends Construct {
       .update(`${cdk.Names.uniqueId(scope)}-${cdk.Names.uniqueId(this)}`)
       .digest('hex');
 
-    // 👇Create Backup S3 Bucket
-    const logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
-      bucketName: `log-archive-${randomNameKey}`,
-    });
+
+    let logArchiveBucket: SecureLogBucket;
+    if (props.targetBucket.length === 0 ) {
+      logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
+        bucketName: `log-archive-${randomNameKey}`,
+      });
+    } else {
+      logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
+        bucketName: props.targetBucket,
+      });
+    }
     logArchiveBucket.addToResourcePolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       principals: [
@@ -74,6 +82,7 @@ export class DailyCloudWatchLogArchiver extends Construct {
         },
       },
     }));
+
 
     // 👇Create Lambda Execution role.
     const lambdaExecutionRole = new iam.Role(this, 'LambdaExecutionRole', {

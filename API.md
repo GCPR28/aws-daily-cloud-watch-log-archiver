@@ -132,6 +132,7 @@ const dailyCloudWatchLogArchiverProps: DailyCloudWatchLogArchiverProps = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@gcpr28/aws-daily-cloud-watch-log-archiver.DailyCloudWatchLogArchiverProps.property.schedules">schedules</a></code> | <code><a href="#@gcpr28/aws-daily-cloud-watch-log-archiver.ScheduleProperty">ScheduleProperty</a>[]</code> | *No description.* |
+| <code><a href="#@gcpr28/aws-daily-cloud-watch-log-archiver.DailyCloudWatchLogArchiverProps.property.targetBucket">targetBucket</a></code> | <code>string</code> | *No description.* |
 
 ---
 
@@ -142,6 +143,16 @@ public readonly schedules: ScheduleProperty[];
 ```
 
 - *Type:* <a href="#@gcpr28/aws-daily-cloud-watch-log-archiver.ScheduleProperty">ScheduleProperty</a>[]
+
+---
+
+##### `targetBucket`<sup>Required</sup> <a name="targetBucket" id="@gcpr28/aws-daily-cloud-watch-log-archiver.DailyCloudWatchLogArchiverProps.property.targetBucket"></a>
+
+```typescript
+public readonly targetBucket: string;
+```
+
+- *Type:* string
 
 ---
 

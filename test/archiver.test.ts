@@ -12,6 +12,7 @@ describe('DailyCloudWatchLogArchiver Testing', () => {
   });
 
   new DailyCloudWatchLogArchiver(stack, 'DailyCloudWatchLogArchiver', {
+    targetBucket: 'example-log-archive-bucket',
     schedules: [
       {
         name: 'example-log-archive-1st-rule',
@@ -245,6 +246,7 @@ describe('DailyCloudWatchLogArchiver Testing', () => {
     it('Should have error of schedule not set', () => {
       expect(() => {
         new DailyCloudWatchLogArchiver(new Stack(new App()), 'DailyCloudWatchLogArchiver', {
+          targetBucket: '',
           schedules: [],
         });
       }).toThrow(Error);
@@ -252,6 +254,7 @@ describe('DailyCloudWatchLogArchiver Testing', () => {
     it('Should have error of schedule count over', () => {
       expect(() => {
         new DailyCloudWatchLogArchiver(new Stack(new App()), 'DailyCloudWatchLogArchiver', {
+          targetBucket: '',
           schedules: [...Array(61)].map((_, i) => {
             const id = ('00' + i).slice(-2);
             return {
