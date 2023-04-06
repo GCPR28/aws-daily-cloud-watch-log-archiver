@@ -11,7 +11,7 @@ This construct creating resource list.
 - Lambda function
 - EventBridge Scheduler execution role
 - EventBridge Scheduler Group
-- EventBridge Scheduler (this construct props specified count)
+- EventBridge Scheduler (this construct props specified count).
 
 ## Install
 
