@@ -1,9 +1,9 @@
 {
-  "name": "@yicr/aws-daily-cloud-watch-log-archiver",
+  "name": "@gcpr28/aws-daily-cloud-watch-log-archiver",
   "description": "AWS CloudWatch Logs daily archive to s3 bucket",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yicr/aws-daily-cloud-watch-log-archiver.git"
+    "url": "https://github.com/GCPR28/aws-daily-cloud-watch-log-archiver.git"
   },
   "scripts": {
     "build": "npx projen build",
@@ -33,8 +33,8 @@
     "projen": "npx projen"
   },
   "author": {
-    "name": "yicr",
-    "email": "yicr@users.noreply.github.com",
+    "name": "GCPR28",
+    "email": "GCPR28@users.noreply.github.com",
     "organization": false
   },
   "devDependencies": {
