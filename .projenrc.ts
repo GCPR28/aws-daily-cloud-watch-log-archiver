@@ -32,7 +32,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     // target node.js runtime
     runtime: awscdk.LambdaRuntime.NODEJS_18_X,
     bundlingOptions: {
-      // list of node modules to exclude from the bundle
+      // list of node modules to exclude from the bundle.
       externals: ['@aws-sdk/client-cloudwatch-logs'],
       sourcemap: true,
     },
