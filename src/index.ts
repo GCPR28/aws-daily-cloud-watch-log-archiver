@@ -44,7 +44,8 @@ export class DailyCloudWatchLogArchiver extends Construct {
 
 
     let logArchiveBucket: SecureLogBucket;
-    if (props.targetBucket.length === 0 ) {
+
+    if ( props.targetBucket === undefined || props.targetBucket.length === 0 ) {
       logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
         bucketName: `log-archive-${randomNameKey}`,
       });
