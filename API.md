@@ -146,7 +146,7 @@ public readonly schedules: ScheduleProperty[];
 
 ---
 
-##### `targetBucket`<sup>Required</sup> <a name="targetBucket" id="@gcpr28/aws-daily-cloud-watch-log-archiver.DailyCloudWatchLogArchiverProps.property.targetBucket"></a>
+##### `targetBucket`<sup>Optional</sup> <a name="targetBucket" id="@gcpr28/aws-daily-cloud-watch-log-archiver.DailyCloudWatchLogArchiverProps.property.targetBucket"></a>
 
 ```typescript
 public readonly targetBucket: string;
