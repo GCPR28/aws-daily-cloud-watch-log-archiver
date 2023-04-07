@@ -8,7 +8,7 @@ import { LogArchiverFunction } from './funcs/log-archiver-function';
 
 export interface DailyCloudWatchLogArchiverProps {
   readonly schedules: ScheduleProperty[];
-  readonly targetBucket: string;
+  readonly targetBucket?: string;
 }
 
 export interface ScheduleProperty {
