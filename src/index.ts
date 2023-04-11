@@ -119,7 +119,7 @@ export class DailyCloudWatchLogArchiver extends Construct {
           },
         },
       }));
-
+      existingBucket.grantReadWrite(new iam.ServicePrincipal(`logs.${region}.amazonaws.com`));
     }
 
 
