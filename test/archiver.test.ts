@@ -12,7 +12,6 @@ describe('DailyCloudWatchLogArchiver Testing', () => {
   });
 
   new DailyCloudWatchLogArchiver(stack, 'DailyCloudWatchLogArchiver', {
-    targetBucket: 'example-log-archive-bucket',
     schedules: [
       {
         name: 'example-log-archive-1st-rule',

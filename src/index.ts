@@ -2,6 +2,7 @@ import * as crypto from 'crypto';
 import { SecureLogBucket } from '@yicr/secure-log-bucket';
 import * as cdk from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import { Bucket } from 'aws-cdk-lib/aws-s3';
 import * as scheduler from 'aws-cdk-lib/aws-scheduler';
 import { Construct } from 'constructs';
 import { LogArchiverFunction } from './funcs/log-archiver-function';
@@ -43,46 +44,54 @@ export class DailyCloudWatchLogArchiver extends Construct {
       .digest('hex');
 
 
-    let logArchiveBucket: SecureLogBucket;
+    let localBucket = {
+      bucketName: '',
+      bucketARN: '',
+    };
 
     if ( props.targetBucket === undefined || props.targetBucket.length === 0 ) {
-      logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
+
+      const logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
         bucketName: `log-archive-${randomNameKey}`,
       });
-    } else {
-      logArchiveBucket = new SecureLogBucket(this, 'LogArchiveBucket', {
-        bucketName: props.targetBucket,
-      });
-    }
-    logArchiveBucket.addToResourcePolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      principals: [
-        new iam.ServicePrincipal(`logs.${region}.amazonaws.com`),
-      ],
-      actions: [
-        's3:GetBucketAcl',
-      ],
-      resources: [
-        logArchiveBucket.bucketArn,
-      ],
-    }));
-    logArchiveBucket.addToResourcePolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      principals: [
-        new iam.ServicePrincipal(`logs.${region}.amazonaws.com`),
-      ],
-      actions: [
-        's3:PutObject',
-      ],
-      resources: [
-        `${logArchiveBucket.bucketArn}/*`,
-      ],
-      conditions: {
-        StringEquals: {
-          's3:x-amz-acl': 'bucket-owner-full-control',
+
+      logArchiveBucket.addToResourcePolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [
+          new iam.ServicePrincipal(`logs.${region}.amazonaws.com`),
+        ],
+        actions: [
+          's3:GetBucketAcl',
+        ],
+        resources: [
+          logArchiveBucket.bucketArn,
+        ],
+      }));
+      logArchiveBucket.addToResourcePolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [
+          new iam.ServicePrincipal(`logs.${region}.amazonaws.com`),
+        ],
+        actions: [
+          's3:PutObject',
+        ],
+        resources: [
+          `${logArchiveBucket.bucketArn}/*`,
+        ],
+        conditions: {
+          StringEquals: {
+            's3:x-amz-acl': 'bucket-owner-full-control',
+          },
         },
-      },
-    }));
+      }));
+      localBucket.bucketName = logArchiveBucket.bucketName;
+      localBucket.bucketARN = logArchiveBucket.bucketArn;
+    } else {
+      const existingBucket = Bucket.fromBucketName(this, 'existingBucket', props.targetBucket);
+      localBucket.bucketName = existingBucket.bucketName;
+      localBucket.bucketARN = existingBucket.bucketArn;
+
+    }
 
 
     // 👇Create Lambda Execution role.
@@ -114,7 +123,7 @@ export class DailyCloudWatchLogArchiver extends Construct {
                 's3:PutObject',
               ],
               resources: [
-                logArchiveBucket.bucketArn,
+                localBucket.bucketARN,
               ],
             }),
           ],
@@ -127,7 +136,7 @@ export class DailyCloudWatchLogArchiver extends Construct {
       functionName: `daily-cw-log-archiver-${randomNameKey}-func`,
       description: 'A function to archive logs s3 bucket from CloudWatch Logs.',
       environment: {
-        BUCKET_NAME: logArchiveBucket.bucketName,
+        BUCKET_NAME: localBucket.bucketName,
       },
       role: lambdaExecutionRole,
     });
