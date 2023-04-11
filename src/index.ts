@@ -90,6 +90,35 @@ export class DailyCloudWatchLogArchiver extends Construct {
       const existingBucket = Bucket.fromBucketName(this, 'existingBucket', props.targetBucket);
       localBucket.bucketName = existingBucket.bucketName;
       localBucket.bucketARN = existingBucket.bucketArn;
+      existingBucket.addToResourcePolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [
+          new iam.ServicePrincipal(`logs.${region}.amazonaws.com`),
+        ],
+        actions: [
+          's3:GetBucketAcl',
+        ],
+        resources: [
+          existingBucket.bucketArn,
+        ],
+      }));
+      existingBucket.addToResourcePolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [
+          new iam.ServicePrincipal(`logs.${region}.amazonaws.com`),
+        ],
+        actions: [
+          's3:PutObject',
+        ],
+        resources: [
+          `${localBucket.bucketARN}/*`,
+        ],
+        conditions: {
+          StringEquals: {
+            's3:x-amz-acl': 'bucket-owner-full-control',
+          },
+        },
+      }));
 
     }
 
